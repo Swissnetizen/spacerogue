@@ -19,7 +19,7 @@
       };
 
       BootState.prototype.create = function() {
-        this.game.stage.backgroundColor = "#3498db";
+        this.game.stage.backgroundColor = "#222";
         this.game.physics.startSystem(Phaser.Physics.NINJA);
         this.game.state.start("load");
       };
