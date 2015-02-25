@@ -7,7 +7,7 @@ define ["Phaser"], (Phaser) ->
       return
     create: ->
       # Set a background color and the physics system
-      @game.stage.backgroundColor = "#3498db"
+      @game.stage.backgroundColor = "#222"
       @game.physics.startSystem Phaser.Physics.NINJA
       @game.state.start "load"
       return
