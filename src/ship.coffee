@@ -1,4 +1,4 @@
-define ["Phaser"], (Phaser) ->
+define ["Phaser", "PlayerControl"], (Phaser) ->
   exports = {}
   exports.BaseShip = class BaseShip extends Phaser.Sprite
     #Properties of a ship
