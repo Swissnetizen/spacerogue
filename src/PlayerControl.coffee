@@ -1,3 +1,4 @@
+"use strict"
 define ["Phaser"], (Phaser) ->
   exports = {}
   exports.PlayerShipMenu = class PlayerShipMenu
@@ -29,4 +30,5 @@ define ["Phaser"], (Phaser) ->
       @ui.add @moveRange
       @moveRange.kill()
       @game.add.existing @moveRange
+    showMoveRange: ->
   exports

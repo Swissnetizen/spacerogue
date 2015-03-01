@@ -1,3 +1,4 @@
+"use strict"
 define ["Phaser"], (Phaser) ->
   exports = {}
   exports.BaseShip = class BaseShip extends Phaser.Sprite
