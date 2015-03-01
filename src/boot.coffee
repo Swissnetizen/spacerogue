@@ -6,9 +6,11 @@ define ["Phaser"], (Phaser) ->
       @game.load.image "progressBar", "assets/progressBar.png"
       return
     create: ->
+      # Pixel Art mode
+      this.game.renderer.renderSession.roundPixels = true;
       # Set a background color and the physics system
       @game.stage.backgroundColor = "#222"
-      @game.physics.startSystem Phaser.Physics.NINJA
+      @game.physics.startSystem Phaser.Physics.P2JS
       @game.state.start "load"
       return
   return exports

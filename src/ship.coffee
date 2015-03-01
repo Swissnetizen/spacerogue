@@ -1,4 +1,4 @@
-define ["Phaser", "PlayerControl"], (Phaser) ->
+define ["Phaser"], (Phaser) ->
   exports = {}
   exports.BaseShip = class BaseShip extends Phaser.Sprite
     #Properties of a ship
@@ -13,7 +13,8 @@ define ["Phaser", "PlayerControl"], (Phaser) ->
       @hardPoints = []
       @UtilPoints = []
       @Crew = []
-      super(game, x, y, key, frame)
+      super game, x, y, key, frame
+      @anchor.setTo .5, .5
 
   #Return Exports
   exports

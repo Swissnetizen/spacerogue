@@ -4,12 +4,18 @@ define ["Phaser"], (Phaser) ->
   exports.MenuState = class MenuState extends Phaser.State
     create: ->
       # Name of the @game
-      nameLabel = @game.add.text(@game.world.centerX, 80, "Name",
+      nameLabel = @game.add.text(
+        @game.world.centerX,
+        80,
+        "Mone Ships",
         font: "50px Arial"
         fill: "#ffffff")
       nameLabel.anchor.setTo 0.5, 0.5
       # How to start the @game
-      startLabel = @game.add.text(@game.world.centerX, @game.world.height - 80, "press the up arrow key to start",
+      startLabel = @game.add.text(
+        @game.world.centerX
+        @game.world.height - 80,
+        "press the up arrow key to start",
         font: "25px Arial"
         fill: "#ffffff")
       startLabel.anchor.setTo 0.5, 0.5

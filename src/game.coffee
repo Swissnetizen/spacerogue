@@ -2,7 +2,7 @@
 requirejs.config (
     baseUrl: "js"
     paths:
-      Phaser:   "../phaser.min"
+      Phaser:   "../phaser"
 )
 require ["Phaser", "boot", "load", "menu", "play"], (Phaser, boot, load, menu, play) ->
   "use strict"
