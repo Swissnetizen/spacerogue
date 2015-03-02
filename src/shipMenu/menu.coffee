@@ -1,11 +1,13 @@
 "use strict"
-define ["Phaser"], (Phaser) ->
+define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
   exports =
     MoveRange: class MoveRange extends Phaser.Sprite
       constructor: (@game) ->
+        @button = {}
+        @on = {}
         #Draw Circle
         super(game, 0, 0)
-        @draw()
+        @draw(undefined, undefined, {font: "16px Ubuntu", fill: "#FFFFFF"})
         @visible = no
         # Mouse click handeler
         @inputEnabled = yes
@@ -24,15 +26,16 @@ define ["Phaser"], (Phaser) ->
         x = eventData.x
         y = eventData.y
         # if the click is not in the circle, hide the circle and return
-        unless hitbox.contains x, y
-          @hide()
-          return
-
+        @hide()
+        this
       defineHitbox: ->
         # Define the circle
         new Phaser.Circle(@x, @y, 2*(@radius+@lineWidth))
       # Function to draw the range circle.
-      draw: (@radius=40, @lineWidth=5) ->
+      draw: (radius, lineWidth, font) ->
+        @drawCircle radius, lineWidth
+        @drawButtons font
+      drawCircle: (@radius=40, @lineWidth=5) ->
         # Add enough space to display the circle plus the line width.
         keySize = @radius*2+@lineWidth
         key = game.make.bitmapData keySize, keySize
@@ -46,5 +49,19 @@ define ["Phaser"], (Phaser) ->
         key.ctx.stroke()
         # Load
         @loadTexture key
+        #Buttons
         this
-
+      drawButtons: (font) ->
+        @missileButton = new textButton.TextButton(@game, 0, 0, "missile", font, @whenMissileButton)
+        @laserButton = new textButton.TextButton(@game, 0, 0, "laser", font, @whenMissileButton)
+        game.add.existing @missileButton
+        game.add.existing @laserButton
+        @addChild @missileButton
+        @addChild @laserButton
+        @missileButton.y -= @radius+@lineWidth + 10
+        @laserButton.y += @radius+@lineWidth + 10
+        this
+      whenMissileButton: (event) =>
+        console.dir arguements
+#      whenLaserButton: (event) =>
+#        console.dir arguements
