@@ -6,10 +6,12 @@ define ["Phaser", "shipMenu/moveRange"], (Phaser, moveRange) ->
       @spriteArray = []
       #Menu
       @createUi()
+
     enableControlOnSprite: (sprite) ->
       @spriteArray.push sprite
       sprite.inputEnabled = true
       sprite.events.onInputUp.add @onSpriteClicked, this
+
     onSpriteClicked: (sprite, eventData, something) ->
       unless @moveRange.visible
         @moveRange.show sprite.x, sprite.y
@@ -24,4 +26,5 @@ define ["Phaser", "shipMenu/moveRange"], (Phaser, moveRange) ->
       #Ui hider
       @ui.add @moveRange
       game.add.existing @moveRange
+
   exports
