@@ -1,23 +1,38 @@
 "use strict"
 define ["Phaser"], (Phaser) ->
   exports =
-    MoveRange: class x extends Phaser.Sprite
-      constructor: (@game, x, y) ->
+    MoveRange: class MoveRange extends Phaser.Sprite
+      constructor: (@game) ->
         #Draw Circle
-        key = game.make.bitmapData 1000, 1000
-        key.ctx.arc 500, 500, 150, 0, 2 * Math.PI, false
-        key.ctx.lineWidth = 5
-        key.ctx.strokeStyle = "#FFFFFF"
-        key.ctx.stroke()
-        super(game, 0, 0, key)
-        @kill()
-        visible = false
-        this
+        super(game, 0, 0)
+        @draw()
+        @visible = no
+        # Mouse click handeler
+        @inputEnabled = yes
+        @events.onInputUp.add @onClicked, this
+
       show: (x, y) ->
-        @visible = true
+        @visible = yes
+        @reset x, y
         this
       hide: ->
-        @visible = false
+        @visible = no
+        console.log " vhi"
         this
-
+      onClicked: (sprite, eventData) ->
+      # Function to draw the range circle
+      draw: (radius=150, lineWidth=5) ->
+        # Add enough space to display the circle plus the line width.
+        keySize = radius*2+lineWidth
+        key = game.make.bitmapData keySize, keySize
+        # Render the circle at the centre
+        keyCentre = keySize/2
+        key.ctx.arc keyCentre, keyCentre, radius, 0, 2 * Math.PI, false
+        # Set line width and colour
+        key.ctx.lineWidth = lineWidth
+        key.ctx.strokeStyle = "#FFFFFF"
+        # Draw
+        key.ctx.stroke()
+        # Load
+        @loadTexture key
 
