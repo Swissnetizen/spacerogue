@@ -9,17 +9,22 @@ define ["Phaser"], (Phaser) ->
         @visible = no
         # Mouse click handeler
         @inputEnabled = yes
-        @events.onInputUp.add @onClicked, this
+        @events.onInputUp.add @whenClicked, this
 
-      show: (x, y) ->
+      show: (sprite) ->
         @visible = yes
-        @reset x, y
+        @reset sprite.x, sprite.y
+        @aroundSprite = sprite
         this
+
       hide: ->
         @visible = no
         console.log " vhi"
+        @aroundSprite = undefined
         this
-      onClicked: (sprite, eventData) ->
+
+      whenClicked: (sprite, eventData) ->
+
       # Function to draw the range circle
       draw: (radius=150, lineWidth=5) ->
         # Add enough space to display the circle plus the line width.
@@ -35,4 +40,5 @@ define ["Phaser"], (Phaser) ->
         key.ctx.stroke()
         # Load
         @loadTexture key
+        this
 
