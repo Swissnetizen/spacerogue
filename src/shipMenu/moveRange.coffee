@@ -8,18 +8,17 @@ define ["Phaser"], (Phaser) ->
         @draw()
         @visible = no
         # Mouse click handeler
-        @inputEnabled = yes
+        @inputEnabled = no
         @events.onInputUp.add @whenClicked, this
 
       show: (sprite) ->
         @visible = yes
         @reset sprite.x, sprite.y
-        @aroundSprite = sprite
+        @selectedSprite = sprite
         this
 
       hide: ->
         @visible = no
-        console.log " vhi"
         @aroundSprite = undefined
         this
 
