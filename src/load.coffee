@@ -13,8 +13,10 @@ define ["Phaser"], (Phaser) ->
       progressBar.anchor.setTo 0.5, 0.5
       @game.load.setPreloadSprite progressBar
       # Load all assets
+      # TODO: implement better way to batch load (via YAML?)
       @game.load.spritesheet "mute", "assets/muteButton.png", 28, 22
       @game.load.image "shuttle", "assets/shuttle.png"
+      @game.load.image "destination", "assets/destination.png"
       # ...
       return
     create: ->
