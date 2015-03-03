@@ -17,6 +17,12 @@ define ["Phaser"], (Phaser) ->
       @game.load.spritesheet "mute", "assets/muteButton.png", 28, 22
       @game.load.image "shuttle", "assets/shuttle.png"
       @game.load.image "destination", "assets/destination.png"
+      versionLabel = @game.add.text(
+        @game.world.width-70
+        5
+        "v#{game.global.version}",
+          font: "25px pixelated"
+          fill: "#ffffff")
       # ...
       return
     create: ->

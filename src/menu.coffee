@@ -20,6 +20,12 @@ define ["Phaser"], (Phaser) ->
           fill: "#ffffff")
       startLabel.anchor.setTo 0.5, 0.5
       @game.add.tween(startLabel).to({ angle: -2 }, 500).to({ angle: 2 }, 500).loop().start()
+      versionLabel = @game.add.text(
+        @game.world.width-70
+        5
+        "v#{game.global.version}",
+          font: "25px pixelated"
+          fill: "#ffffff")
       # Add a mute button
       @muteButton = @game.add.button 20, 20, "mute", @toggleSound, this
       @muteButton.input.useHandCursor = true

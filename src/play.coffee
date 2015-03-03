@@ -3,6 +3,12 @@ define ["Phaser", "Ship", "PlayerControl"], (Phaser, ship, playerControl) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
+      versionLabel = @game.add.text(
+        @game.world.width-70
+        5
+        "v#{game.global.version}",
+          font: "25px pixelated"
+          fill: "#ffffff")
       game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add @end, this
       game.physics.p2.defaultRestitution = 0.8;
       @ship1 = new ship.BaseShip(@game, 250, 175, "shuttle")
