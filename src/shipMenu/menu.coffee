@@ -7,7 +7,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @on = {}
         #Draw Circle
         super game, 0, 0
-        @draw undefined, undefined, {font: "16px Ubuntu", fill: "#FFFFFF"}
+        @draw undefined, undefined, {font: "16px pixelated", fill: "#FFFFFF"}
         @visible = no
         #Anchor
         @anchor.set .5, .5
@@ -18,28 +18,22 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         key = game.make.bitmapData @game.global.boardSize, @game.global.boardSize
         @detectingBox = new Phaser.Sprite(@game, 0, 0, key)
         game.add.existing @detectingBox
-        @detectingBox.scale.set 10, 10
         @detectingBox.events.onInputUp.add @whenClickDetecting,  this
-#        # Input stuff
-#        @detectingBox.inputEnabled = yes
-#        @detectingBox.input.priorityID = 0
-#        @detectingBox.inputEnabled = no
         console.dir @detectingBox
       show: (sprite) ->
         @visible = yes
         # Reset position
         @reset sprite.x, sprite.y
         @hitbox = @defineHitbox()
-        @selectedSprite = sprite
+        @selectedShip = sprite
         # Make it possible to move
         @detectingBox.inputEnabled = yes
         # Stop movement
-        @selectedSprite.body.velocity.x = 0
-        @selectedSprite.body.velocity.y = 0
+        @selectedShip.stop true
         this
       hide: ->
         @visible = no
-        @selectedSprite = undefined
+        @selectedShip = undefined
         @detectingBox.inputEnabled = no
         this
       whenClicked: (sprite, eventData) ->
@@ -60,17 +54,12 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
       whenClickDetecting: (sprite, eventData, someting) ->
         x = eventData.x
         y = eventData.y
-        ship = @selectedSprite
+        ship = @selectedShip
         # Is the click in the menu circle?
         return if @hitbox.contains x, y
         # Calculate angle
         console.log "move"
-        angle = Math.atan2 y - ship.y, x - ship.x
-        # Correct angle of angry bullets (depends on the sprite used)
-        ship.body.rotation = angle + game.math.degToRad 90
-        # Set sprite in motion
-        ship.body.velocity.x = Math.cos(angle) * ship.speed
-        ship.body.velocity.y = Math.sin(angle) * ship.speed
+        ship.move new Phaser.Point(x, y)
         # Hide Menu
         @hide()
       drawCircle: (@radius=40, @lineWidth=5) ->
@@ -103,6 +92,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @missileButton.input.priorityID = 1
         @laserButton.input.priorityID = 1
         this
+        # TODO: Implement missile and laser functionnality
       whenMissileButton: (event) ->
         console.dir(arguments)
 #      whenLaserButton: (event) ->
