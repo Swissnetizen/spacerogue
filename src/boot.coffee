@@ -7,7 +7,7 @@ define ["Phaser"], (Phaser) ->
       return
     create: ->
       # Pixel Art mode
-      this.game.renderer.renderSession.roundPixels = true;
+      Phaser.Canvas.setImageRenderingCrisp @game.canvas
       # Set a background color and the physics system
       @game.stage.backgroundColor = "#222"
       @game.physics.startSystem Phaser.Physics.P2JS
