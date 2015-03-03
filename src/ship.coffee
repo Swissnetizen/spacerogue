@@ -9,15 +9,16 @@ define ["Phaser"], (Phaser) ->
     maxCargo: 4,
     maxUtilPoints: 3
     maxCrew: 6
-    minCrew: 3
+    minCrew: 2
     #Speed in px/s (m/s)
-    speed: 20
+    speed: 125
     constructor: (game, x, y, key, frame) ->
       @hardPoints = []
       @UtilPoints = []
       @Crew = []
       super game, x, y, key, frame
-      @anchor.setTo .5, .5
+      @game.physics.p2.enable this
+      console.dir this
 
   #Return Exports
   exports

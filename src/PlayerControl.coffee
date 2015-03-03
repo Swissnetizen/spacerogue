@@ -23,7 +23,7 @@ define ["Phaser", "shipMenu/menu"], (Phaser, moveRange) ->
       true
     #Create UI elements for later use.
     createUi: ->
-      @ui = new Phaser.Group(game, null, "PlayerShipMenu", false, true, Phaser.Physics.P2JS)
+      @ui = new Phaser.Group(game, null, "PlayerShipMenu", false, true)
       #Setup moveRange viewer
       @moveRange = new moveRange.MoveRange(@game, 0, 0)
       #Ui hider

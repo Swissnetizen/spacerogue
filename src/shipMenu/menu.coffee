@@ -9,6 +9,8 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         super game, 0, 0
         @draw undefined, undefined, {font: "16px Ubuntu", fill: "#FFFFFF"}
         @visible = no
+        #Anchor
+        @anchor.set .5, .5
         # Mouse click handeler
         @inputEnabled = yes
         @events.onInputUp.add @whenClicked, this
@@ -18,16 +20,22 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         game.add.existing @detectingBox
         @detectingBox.scale.set 10, 10
         @detectingBox.events.onInputUp.add @whenClickDetecting,  this
-        # Input stuff
-        @detectingBox.inputEnabled = yes
-        @detectingBox.input.priorityID = 2
-        @detectingBox.inputEnabled = no
+#        # Input stuff
+#        @detectingBox.inputEnabled = yes
+#        @detectingBox.input.priorityID = 0
+#        @detectingBox.inputEnabled = no
         console.dir @detectingBox
       show: (sprite) ->
         @visible = yes
+        # Reset position
         @reset sprite.x, sprite.y
+        @hitbox = @defineHitbox()
         @selectedSprite = sprite
+        # Make it possible to move
         @detectingBox.inputEnabled = yes
+        # Stop movement
+        @selectedSprite.body.velocity.x = 0
+        @selectedSprite.body.velocity.y = 0
         this
       hide: ->
         @visible = no
@@ -35,11 +43,10 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @detectingBox.inputEnabled = no
         this
       whenClicked: (sprite, eventData) ->
-        hitbox = @defineHitbox()
         x = eventData.x
         y = eventData.y
         # if the click is in the circle, hide the menu and return
-        if hitbox.contains x, y
+        if @hitbox.contains x, y
           @hide()
         this
       defineHitbox: ->
@@ -51,20 +58,27 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @drawButtons font
         # Detects where to move when the player opens the menu
       whenClickDetecting: (sprite, eventData, someting) ->
-        #Calculate angle
+        x = eventData.x
+        y = eventData.y
+        ship = @selectedSprite
+        # Is the click in the menu circle?
+        return if @hitbox.contains x, y
+        # Calculate angle
         console.log "move"
-        angle = Math.atan2 eventData.y - sprite.y, eventdata.x - sprite.x
-         # correct angle of angry bullets (depends on the sprite used)
-        sprite.body.rotation = angle + game.math.degToRad 90
-        #
-        sprite.body.force.x = Math.cos(angle) * speed
-        sprite.body.force.y = Math.sin(angle) * speed
+        angle = Math.atan2 y - ship.y, x - ship.x
+        # Correct angle of angry bullets (depends on the sprite used)
+        ship.body.rotation = angle + game.math.degToRad 90
+        # Set sprite in motion
+        ship.body.velocity.x = Math.cos(angle) * ship.speed
+        ship.body.velocity.y = Math.sin(angle) * ship.speed
+        # Hide Menu
+        @hide()
       drawCircle: (@radius=40, @lineWidth=5) ->
         # Add enough space to display the circle plus the line width.
-        keySize = @radius*2+@lineWidth
+        keySize = 2 * @radius+@lineWidth
         key = game.make.bitmapData keySize, keySize
         # Render the circle at the centre
-        keyCentre = keySize/2
+        keyCentre = keySize / 2
         key.ctx.arc keyCentre, keyCentre, @radius, 0, 2 * Math.PI, false
         # Set line width and colour
         key.ctx.lineWidth = @lineWidth
