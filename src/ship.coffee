@@ -23,7 +23,7 @@ define ["Phaser"], (Phaser) ->
       # Helps figuring out when we've reached the destination
       @destinationSprite = game.add.sprite 0, 0, "destination"
       @destinationSprite.anchor.set .5, .5
-      @destinationSprite.visibility = off
+      @destinationSprite.visible = off
     move: (point, y) =>
       if typeof point == "object"
         x = point.x
@@ -40,7 +40,7 @@ define ["Phaser"], (Phaser) ->
       @body.velocity.x = Math.cos(angle) * @speed
       @body.velocity.y = Math.sin(angle) * @speed
       console.log "X: #{x} Y: #{y}"
-      #Destination sprite (used to calculate wheather or not it has reached the destination
+      # Useful for player
       @destinationSprite.reset x, y
     stop: (removeDestination)->
       # Remove destination
@@ -49,9 +49,13 @@ define ["Phaser"], (Phaser) ->
       @body.velocity.x = 0
       @body.velocity.y = 0
       @body.angularVelocity = 0
+      @destinationSprite.visible = off
     update: ->
-      if @destination? and Math.round(@x) == @destination.x and Math.round(@y) == @destination.y
-        @stop false
-      console.log Phaser.Rectangle.contains @, @x, @y
+      # Have we arrived at the destination ?
+      hW = @width / 2 *.2 # Half width
+      hH = @height / 2 * .2# half height
+      d = @destination
+      if d? and @x - hW <= d.x <= @x + hW and @y - hH <= d.y <= @y + hH
+        @stop true
   #Return Exports
   exports

@@ -11,7 +11,7 @@ require ["Phaser", "boot", "load", "menu", "play"], (Phaser, boot, load, menu, p
   game.global =
     score: 0
     boardSize: 1000
-    version: "0.1.0"
+    version: "0.1.1"
   # Define states
   game.state.add "boot", new boot.BootState
   game.state.add "load", new load.LoadState
