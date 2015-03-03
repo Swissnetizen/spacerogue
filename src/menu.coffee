@@ -8,16 +8,16 @@ define ["Phaser"], (Phaser) ->
         @game.world.centerX,
         80,
         "Mone Ships",
-        font: "50px Arial"
-        fill: "#ffffff")
+          font: "50px Arial"
+          fill: "#ffffff")
       nameLabel.anchor.setTo 0.5, 0.5
       # How to start the @game
       startLabel = @game.add.text(
         @game.world.centerX
         @game.world.height - 80,
         "press the up arrow key to start",
-        font: "25px Arial"
-        fill: "#ffffff")
+          font: "25px Arial"
+          fill: "#ffffff")
       startLabel.anchor.setTo 0.5, 0.5
       @game.add.tween(startLabel).to({ angle: -2 }, 500).to({ angle: 2 }, 500).loop().start()
       # Add a mute button

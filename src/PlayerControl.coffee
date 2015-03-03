@@ -1,5 +1,5 @@
 "use strict"
-define ["Phaser", "shipMenu/moveRange"], (Phaser, moveRange) ->
+define ["Phaser", "shipMenu/menu"], (Phaser, moveRange) ->
   exports = {}
   exports.PlayerShipMenu = class PlayerShipMenu
     constructor: (@game) ->
@@ -12,7 +12,6 @@ define ["Phaser", "shipMenu/moveRange"], (Phaser, moveRange) ->
       sprite.events.onInputUp.add @whenSpriteClicked, this
     whenSpriteClicked: (sprite, eventData, something) ->
       # Not visible
-      console.log "0"
       unless @moveRange.visible
         @moveRange.show sprite
       # Visible and around the current sprite
