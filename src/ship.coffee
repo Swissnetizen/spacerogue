@@ -53,7 +53,7 @@ define ["Phaser"], (Phaser) ->
     update: ->
       # Have we arrived at the destination ?
       hW = @width / 2 *.2 # Half width
-      hH = @height / 2 * .2# half height
+      hH = @height / 2 * .2 # half height
       d = @destination
       if d? and @x - hW <= d.x <= @x + hW and @y - hH <= d.y <= @y + hH
         @stop true
