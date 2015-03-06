@@ -1,8 +1,9 @@
 "use strict"
 define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
   exports =
-    MoveRange: class MoveRange extends Phaser.Sprite
+    ShipMenu: class ShipMenu extends Phaser.Sprite
       constructor: (@game) ->
+        @spriteArray = []
         @button = {}
         @on = {}
         #Draw Circle
@@ -17,9 +18,28 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         #Where to move when the menu is open
         key = game.make.bitmapData @game.global.boardSize, @game.global.boardSize
         @detectingBox = new Phaser.Sprite(@game, 0, 0, key)
-        game.add.existing @detectingBox
+        @game.add.existing @detectingBox
         @detectingBox.events.onInputUp.add @whenClickDetecting,  this
         console.dir @detectingBox
+      enableControlOnSprite: (sprite) ->
+        @spriteArray.push sprite
+        sprite.inputEnabled = yes
+        sprite.input.priorityID = 3
+        sprite.events.onInputUp.add @whenSpriteClicked, this
+      whenSpriteClicked: (sprite, eventData, something) ->
+        if @targeting
+          @whenSpriteClickedTargeting sprite, eventData, something
+          return
+        # Not visible
+        unless @visible
+          @show sprite
+        # Visible and around the current sprite
+        else if @visible and @selectedSprite == sprite
+          @hide()
+        # Visible around a different sprite
+        else if @visible and @selectedSprite != sprite
+          @show sprite
+        true
       show: (sprite) ->
         @visible = yes
         # Reset position
@@ -43,6 +63,11 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         if @hitbox.contains x, y
           @hide()
         this
+      #When we are targeting and a sprite was clicked
+      whenSpriteClickedTargeting: (sprite) ->
+        sprite.damage 50
+        console.log "DAMAGE"
+        console.log sprite.health
       defineHitbox: ->
         # Define the circle
         new Phaser.Circle(@x, @y, 2*(@radius+@lineWidth))
@@ -55,10 +80,9 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         x = eventData.x
         y = eventData.y
         ship = @selectedShip
+        @when
         # Is the click in the menu circle?
         return if @hitbox.contains x, y
-        # Calculate angle
-        console.log "move"
         ship.move new Phaser.Point(x, y)
         # Hide Menu
         @hide()
@@ -95,5 +119,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         # TODO: Implement missile and laser functionnality
       whenMissileButton: (event) ->
         console.dir(arguments)
+        @targeting = yes
 #      whenLaserButton: (event) ->
 #        console.dir arguements

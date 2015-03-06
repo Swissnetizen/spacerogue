@@ -1,5 +1,5 @@
 "use strict"
-define ["Phaser", "Ship", "PlayerControl", "planet", "pause"], (Phaser, ship, playerControl, planet, pause) ->
+define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause"], (Phaser, ship, menu, planet, pause) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
@@ -15,9 +15,10 @@ define ["Phaser", "Ship", "PlayerControl", "planet", "pause"], (Phaser, ship, pl
       @ship2 = new ship.BaseShip(@game, 400, 200, "shuttle")
       game.add.existing @ship1
       game.add.existing @ship2
-      @playerUi = new playerControl.PlayerShipMenu(@game);
-      @playerUi.enableControlOnSprite @ship1
-      @playerUi.enableControlOnSprite @ship2
+      game.shipMenu = new menu.ShipMenu(game)
+      game.add.existing game.shipMenu
+      game.shipMenu.enableControlOnSprite @ship1
+      game.shipMenu.enableControlOnSprite @ship2
       # Add planet
       @planet = new planet.Planet(@game, 250, 0, "planet")
       game.add.existing @planet
