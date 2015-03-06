@@ -1,5 +1,5 @@
 "use strict"
-define ["Phaser", "Ship", "PlayerControl", "planet"], (Phaser, ship, playerControl, planet) ->
+define ["Phaser", "Ship", "PlayerControl", "planet", "pause"], (Phaser, ship, playerControl, planet, pause) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
@@ -21,6 +21,9 @@ define ["Phaser", "Ship", "PlayerControl", "planet"], (Phaser, ship, playerContr
       # Add planet
       @planet = new planet.Planet(@game, 250, 0, "planet")
       game.add.existing @planet
+      # Create centralised timer
+      game.timer = new Phaser.Timer(game)
+      game.pauser = new pause.Pauser(game)
     end: ->
       game.state.start "menu"
     update: ->

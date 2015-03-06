@@ -44,12 +44,16 @@ define ["Phaser"], (Phaser) ->
       @destinationSprite.reset x, y
     stop: (removeDestination)->
       # Remove destination
-      @destination = null if removeDestination
+      if removeDestination
+        @destination = null
+        @destinationSprite.visible = off
       #Stop acceleration
       @body.velocity.x = 0
       @body.velocity.y = 0
       @body.angularVelocity = 0
-      @destinationSprite.visible = off
+    start: ->
+      return unless destination
+      @move(@destination)
     update: ->
       # Have we arrived at the destination ?
       hW = @width / 2 *.2 # Half width

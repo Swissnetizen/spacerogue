@@ -29,7 +29,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         # Make it possible to move
         @detectingBox.inputEnabled = yes
         # Stop movement
-        @selectedShip.stop true
+        @selectedShip.stop no
         this
       hide: ->
         @visible = no
