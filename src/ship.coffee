@@ -18,7 +18,7 @@ define ["Phaser"], (Phaser) ->
       @crew = []
       super game, x, y, key, frame
       #Enable Physics
-      @game.physics.p2.enable this
+      @game.physics.p2.enable this, game.global.debug
       @destination = null
       # Helps figuring out when we've reached the destination
       @destinationSprite = game.add.sprite 0, 0, "destination"
