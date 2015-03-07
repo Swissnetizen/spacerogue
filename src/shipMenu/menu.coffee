@@ -55,6 +55,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @visible = no
         @selectedShip = undefined
         @detectingBox.inputEnabled = no
+        @targeting = no
         this
       whenClicked: (ship, eventData) ->
         x = eventData.x
