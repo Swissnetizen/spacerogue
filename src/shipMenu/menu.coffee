@@ -3,7 +3,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
   exports =
     ShipMenu: class ShipMenu extends Phaser.Sprite
       constructor: (@game) ->
-        @spriteArray = []
+        @shipArray = []
         @button = {}
         @on = {}
         #Draw Circle
@@ -21,31 +21,31 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @game.add.existing @detectingBox
         @detectingBox.events.onInputUp.add @whenClickDetecting,  this
         console.dir @detectingBox
-      enableControlOnSprite: (sprite) ->
-        @spriteArray.push sprite
-        sprite.inputEnabled = yes
-        sprite.input.priorityID = 3
-        sprite.events.onInputUp.add @whenSpriteClicked, this
-      whenSpriteClicked: (sprite, eventData, something) ->
+      enableControlOnShip: (ship) ->
+        @shipArray.push ship
+        ship.inputEnabled = yes
+        ship.input.priorityID = 3
+        ship.events.onInputUp.add @whenShipClicked, this
+      whenShipClicked: (ship, eventData, something) ->
         if @targeting
-          @whenSpriteClickedTargeting sprite, eventData, something
+          @whenShipClickedTargeting ship, eventData, something
           return
         # Not visible
         unless @visible
-          @show sprite
-        # Visible and around the current sprite
-        else if @visible and @selectedSprite == sprite
+          @show ship
+        # Visible and around the current ship
+        else if @visible and @selectedShip == ship
           @hide()
-        # Visible around a different sprite
-        else if @visible and @selectedSprite != sprite
-          @show sprite
+        # Visible around a different ship
+        else if @visible and @selectedShip != ship
+          @show ship
         true
-      show: (sprite) ->
+      show: (ship) ->
         @visible = yes
         # Reset position
-        @reset sprite.x, sprite.y
+        @reset ship.x, ship.y
         @hitbox = @defineHitbox()
-        @selectedShip = sprite
+        @selectedShip = ship
         # Make it possible to move
         @detectingBox.inputEnabled = yes
         # Stop movement
@@ -56,18 +56,18 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @selectedShip = undefined
         @detectingBox.inputEnabled = no
         this
-      whenClicked: (sprite, eventData) ->
+      whenClicked: (ship, eventData) ->
         x = eventData.x
         y = eventData.y
         # if the click is in the circle, hide the menu and return
         if @hitbox.contains x, y
           @hide()
         this
-      #When we are targeting and a sprite was clicked
-      whenSpriteClickedTargeting: (sprite) ->
-        sprite.damage 50
+      #When we are targeting and a ship was clicked
+      whenShipClickedTargeting: (ship) =>
+        return if ship == @selectedShip
+        ship.damage 50
         console.log "DAMAGE"
-        console.log sprite.health
       defineHitbox: ->
         # Define the circle
         new Phaser.Circle(@x, @y, 2*(@radius+@lineWidth))
@@ -76,7 +76,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @drawCircle radius, lineWidth
         @drawButtons font
         # Detects where to move when the player opens the menu
-      whenClickDetecting: (sprite, eventData, someting) ->
+      whenClickDetecting: (ship, eventData, someting) ->
         x = eventData.x
         y = eventData.y
         ship = @selectedShip

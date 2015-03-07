@@ -17,8 +17,8 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause"], (Phaser, ship, me
       game.add.existing @ship2
       game.shipMenu = new menu.ShipMenu(game)
       game.add.existing game.shipMenu
-      game.shipMenu.enableControlOnSprite @ship1
-      game.shipMenu.enableControlOnSprite @ship2
+      game.shipMenu.enableControlOnShip @ship1
+      game.shipMenu.enableControlOnShip @ship2
       # Add planet
       @planet = new planet.Planet(@game, 250, 0, "planet")
       game.add.existing @planet
