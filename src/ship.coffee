@@ -18,6 +18,7 @@ define ["Phaser"], (Phaser) ->
       @health = 100
       #Enable Physics
       @game.physics.p2.enable this, game.global.debug
+      @game.physics.arcade.enable this, game.global.debug
       @destination = null
       # Helps figuring out when we've reached the destination
       @destinationSprite = game.add.sprite 0, 0, "destination"

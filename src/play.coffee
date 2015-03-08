@@ -1,8 +1,9 @@
 "use strict"
-define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause"], (Phaser, ship, menu, planet, pause) ->
+define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon"], (Phaser, ship, menu, planet, pause, weapon) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
+      @game.physics.startSystem Phaser.Physics.P2JS
       versionLabel = @game.add.text(
         @game.world.width-70
         5
@@ -11,6 +12,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause"], (Phaser, ship, me
           fill: "#ffffff")
       game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add @end, this
       game.physics.p2.defaultRestitution = 0.8;
+      game.ship = @ship2
       @ship1 = new ship.BaseShip(@game, 250, 200, "shuttle")
       @ship2 = new ship.BaseShip(@game, 400, 200, "shuttle")
       game.add.existing @ship1
@@ -25,6 +27,8 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause"], (Phaser, ship, me
       # Create centralised timer
       game.timer = new Phaser.Timer(game)
       game.pauser = new pause.Pauser(game)
+      game.laser = new weapon.BasicWeapon(game)
+
     end: ->
       game.state.start "menu"
     update: ->

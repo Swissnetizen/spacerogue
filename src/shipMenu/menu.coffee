@@ -66,7 +66,9 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         this
       #When we are targeting and a ship was clicked
       whenShipClickedTargeting: (ship) =>
-        return if ship == @selectedShip
+        # Cannot target self
+        return @hide() if ship == @selectedShip
+        @game.laser.fire @selectedShip, ship
         ship.damage 50
         console.log "DAMAGE"
       defineHitbox: ->
@@ -121,5 +123,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
       whenMissileButton: (event) ->
         console.dir(arguments)
         @targeting = yes
+
 #      whenLaserButton: (event) ->
 #        console.dir arguements

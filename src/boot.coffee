@@ -11,6 +11,7 @@ define ["Phaser"], (Phaser) ->
       # Set a background color and the physics system
       @game.stage.backgroundColor = "#222"
       @game.physics.startSystem Phaser.Physics.P2JS
+      @game.physics.startSystem Phaser.Physics.ARCADE
       @game.state.start "load"
       return
   return exports
