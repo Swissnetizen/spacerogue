@@ -8,7 +8,7 @@ define ["Phaser"], (Phaser) ->
       #An interger or percentage of the chance to hit.
       accuracy: 800 / 1000
       name: "BasicWeapon"
-      maxDistance = 200
+      maxDistance: 200
       constructor: (@game, @fleet) ->
         @canShoot = game.add.sprite 0, 0, "mute"
         @game.physics.p2.enable @canShoot, game.global.debug
@@ -21,6 +21,8 @@ define ["Phaser"], (Phaser) ->
       fire: (ship, target) ->
         direction = new Phaser.Line()
         direction.fromSprite ship, target
+        @ship = ship
+        @target = target
         @moveCanShoot ship.x, ship.y, target.x, target.y
       moveCanShoot: (startX, startY, finishX, finishY) =>
         # Calculate angle
@@ -29,9 +31,10 @@ define ["Phaser"], (Phaser) ->
         @canShoot.body.rotation = angle + game.math.degToRad 90
         # Set sprite in motion
         @canShoot.reset startX+52, startY
-        @canShoot.body.velocity.x = Math.cos(angle) * 20
-        @canShoot.body.velocity.y = Math.sin(angle) * 20
-      contact: () ->
+        @canShoot.body.velocity.x = Math.cos(angle) * 50
+        @canShoot.body.velocity.y = Math.sin(angle) * 50
+      contact: (obj1, obj2) ->
+          # return unless obj1.parent == @target or @ship
           console.dir arguments
           @canShoot.kill()
           return false
