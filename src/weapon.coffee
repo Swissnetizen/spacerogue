@@ -1,7 +1,7 @@
 "use strict"
 define ["Phaser"], (Phaser) ->
   exports =
-    BasicWeapon: class BasicWeapon
+    BasicWeapon: class BasicWeapon extends Phaser.Sprite
       damage: 10
       # How many HP will the damage vary
       variation: 2
@@ -10,29 +10,32 @@ define ["Phaser"], (Phaser) ->
       name: "BasicWeapon"
       maxDistance: 200
       constructor: (@game, @fleet) ->
-        @canShoot = game.add.sprite 0, 0, "mute"
-        @game.physics.p2.enable @canShoot, game.global.debug
-        @canShoot.body.mass= 0.1e-100
-        console.dir @canShoot
-        console.log "X"
+        super @game, 0, 0, "mute"
+        @game.physics.p2.enable this, game.global.debug
+        # VERY SMALL MASS
+        console.dir this
+        @body.mass = 0.1e-100
         @game.physics.p2.onBeginContact.add @contact, this
-        @can
+        @game.add.existing this
+        @Beam = new Phaser.Graphics(@game, 0, 0)
+        @Beam.lineStyle(2, 0xF
       # Fire
       fire: (ship, target) ->
-        direction = new Phaser.Line()
-        direction.fromSprite ship, target
+        @direction = new Phaser.Line()
+        @direction.fromSprite ship, target
         @ship = ship
         @target = target
-        @moveCanShoot ship.x, ship.y, target.x, target.y
-      moveCanShoot: (startX, startY, finishX, finishY) =>
+        @move ship.x, ship.y, target.x, target.y
+      move: (startX, startY, finishX, finishY) =>
         # Calculate angle
         angle = Math.atan2 finishY - startY, finishX - startX
         # NOTE Correct angle of angry bullets (depends on the sprite used)
-        @canShoot.body.rotation = angle + game.math.degToRad 90
+        @body.rotation = angle + game.math.degToRad 90
         # Set sprite in motion
-        @canShoot.reset startX+52, startY
-        @canShoot.body.velocity.x = Math.cos(angle) * 50
-        @canShoot.body.velocity.y = Math.sin(angle) * 50
+        @reset startX+52, startY
+        # Goes at 10× the distance, it should reach the destination in less than 1 ds
+        @body.velocity.x = Math.cos(angle) * @direction.length * 10
+        @body.velocity.y = Math.sin(angle) * @direction.length * 10
       contact: (obj1, obj2) ->
         # NOTE obj1.parent.sprite is the sprite. obj
         # Each sprite MUST have
@@ -40,10 +43,12 @@ define ["Phaser"], (Phaser) ->
         console.log "HI"
         console.dir obj1.parent.sprite
         console.dir obj2.parent.sprite
-        return unless obj1.parent.sprite == @canShoot or obj2.parent.sprite == @canShoot
-        console.log "PASS TEST 1"
+        return unless obj1.parent.sprite == this or obj2.parent.sprite == this
         return unless obj2.parent.sprite == @target or obj1.parent.sprite == @target
-        console.log "passing 2"
-        @canShoot.kill()
+        @kill()
+        @show
         @game.physics.p2.onBeginContact.remove @contact
         return false
+      draw: (from, to) ->
+        @beam.moveTo from.x, from.y
+        @beam.drawLine to.x, to.y
