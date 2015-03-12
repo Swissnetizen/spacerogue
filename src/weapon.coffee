@@ -17,8 +17,7 @@ define ["Phaser"], (Phaser) ->
         @body.mass = 0.1e-100
         @game.physics.p2.onBeginContact.add @contact, this
         @game.add.existing this
-        @Beam = new Phaser.Graphics(@game, 0, 0)
-        @Beam.lineStyle(2, 0xF
+        @beam = game.add.graphics 0, 0
       # Fire
       fire: (ship, target) ->
         @direction = new Phaser.Line()
@@ -41,14 +40,15 @@ define ["Phaser"], (Phaser) ->
         # Each sprite MUST have
         return unless obj1.parent and obj2.parent
         console.log "HI"
-        console.dir obj1.parent.sprite
-        console.dir obj2.parent.sprite
         return unless obj1.parent.sprite == this or obj2.parent.sprite == this
         return unless obj2.parent.sprite == @target or obj1.parent.sprite == @target
         @kill()
-        @show
+        @draw @ship, @target
         @game.physics.p2.onBeginContact.remove @contact
         return false
       draw: (from, to) ->
+        console.log "(HELLO)"
+        @beam.lineStyle 5, 0xFF0000, 1
         @beam.moveTo from.x, from.y
-        @beam.drawLine to.x, to.y
+        @beam.lineTo to.x, to.y
+        @game.timer

@@ -28,7 +28,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon"], (Phaser
       game.timer = new Phaser.Timer(game)
       game.pauser = new pause.Pauser(game)
       game.laser = new weapon.BasicWeapon(game)
-
+      game.timer.start()
     end: ->
       game.state.start "menu"
     update: ->
