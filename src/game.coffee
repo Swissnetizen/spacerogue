@@ -3,6 +3,7 @@ requirejs.config (
     baseUrl: "js"
     paths:
       Phaser:   "../phaser"
+      _: "../lodash"
 )
 require ["Phaser", "boot", "load", "menu", "play"], (Phaser, boot, load, menu, play) ->
   "use strict"

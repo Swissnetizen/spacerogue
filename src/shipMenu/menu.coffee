@@ -69,7 +69,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         # Cannot target self
         return @hide() if ship == @selectedShip
         @game.laser.fire @selectedShip, ship
-        ship.damage 50
         console.log "DAMAGE"
       defineHitbox: ->
         # Define the circle
