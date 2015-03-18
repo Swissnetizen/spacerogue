@@ -25,11 +25,9 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon"], (Phaser
       @planet = new planet.Planet(@game, 250, 0, "planet")
       game.add.existing @planet
       # Create centralised timer
-      game.timer = new Phaser.Timer(game, no)
+      game.timer = game.time.create off
       game.pauser = new pause.Pauser(game)
       game.laser = new weapon.BasicWeapon(game)
-      game.timer.add 100, ->
-        console.log "HIYAD"
       game.timer.start()
     end: ->
       game.state.start "menu"

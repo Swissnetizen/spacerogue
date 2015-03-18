@@ -2,13 +2,14 @@
 define ["Phaser", "_"], (Phaser) ->
   exports =
     BasicWeapon: class BasicWeapon
-      damage: 10
+      damage: 20
       # How many HP will the damage vary
       variation: 2
       #An interger or percentage of the chance to hit.
       accuracy: 800 / 1000
       name: "BasicWeapon"
       maxDistance: 200
+      timeActive: 1000
       constructor: (@game, @fleet) ->
         console.dir this
         @beam = game.add.graphics 0, 0
@@ -33,9 +34,10 @@ define ["Phaser", "_"], (Phaser) ->
         @beam.lineStyle 2, 0xFF0000, 1
         @beam.moveTo from.x, from.y
         @beam.lineTo to.x, to.y
-        setTimeout =>
+        # Do damage in two seperate strokes
+        game.timer.add @timeActive / 2, =>
+          @target.damage @damage / 2
+        game.timer.add @timeActive, =>
           @beam.clear()
-          @target.damage 10
-          console.log "timerd"
-        , 1000
+          @target.damage @damage / 2
 
