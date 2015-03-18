@@ -25,7 +25,6 @@ define ["Phaser", "_"], (Phaser) ->
             # Checks if any of the sprites are other than the ship OR target
            _.each (@game.physics.p2.hitTest {x: n[0], y: n[1]}), (n) =>
                 @fail = yes unless n.id == @ship.body.id || n.id == @target.body.id
-        console.log @fail
         return if @fail
         # Draw attack laser thing if TRUE
         @draw ship, target

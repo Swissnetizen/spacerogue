@@ -39,7 +39,6 @@ define ["Phaser"], (Phaser) ->
       # Set sprite in motion
       @body.velocity.x = Math.cos(angle) * @speed
       @body.velocity.y = Math.sin(angle) * @speed
-      console.log "X: #{x} Y: #{y}"
       # Useful for player
       @destinationSprite.reset x, y
     stop: (removeDestination)->

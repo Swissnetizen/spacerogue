@@ -20,7 +20,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         @detectingBox = new Phaser.Sprite(@game, 0, 0, key)
         @game.add.existing @detectingBox
         @detectingBox.events.onInputUp.add @whenClickDetecting,  this
-        console.dir @detectingBox
       enableControlOnShip: (ship) ->
         @shipArray.push ship
         ship.inputEnabled = yes
@@ -69,7 +68,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         # Cannot target self
         return @hide() if ship == @selectedShip
         @game.laser.fire @selectedShip, ship
-        console.log "DAMAGE"
       defineHitbox: ->
         # Define the circle
         new Phaser.Circle(@x, @y, 2*(@radius+@lineWidth))
@@ -120,8 +118,6 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         this
         # TODO: Implement missile and laser functionnality
       whenMissileButton: (event) ->
-        console.dir(arguments)
         @targeting = yes
 
 #      whenLaserButton: (event) ->
-#        console.dir arguements
