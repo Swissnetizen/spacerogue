@@ -20,16 +20,18 @@ define ["Phaser", "_"], (Phaser) ->
         @ship = ship
         @target = target
         # Go over line to find intersections
+        return unless @canFire()
+        # Draw attack laser thing if TRUE
+        @game.timer.add 1, =>
+          @draw ship, target
+      canFire: ->
         @fail = no
-        _.each (@direction.coordinatesOnLine 5), (n) =>
+        _.each (@direction.coordinatesOnLine @ship.body.width / @accuracy), (n) =>
             # Checks if any of the sprites are other than the ship OR target
            _.each (@game.physics.p2.hitTest {x: n[0], y: n[1]}), (n) =>
                 @fail = yes unless n.id == @ship.body.id || n.id == @target.body.id
-        return if @fail
-        # Draw attack laser thing if TRUE
-        @draw ship, target
+        return !@fail
       draw: (from, to) ->
-        console.log "(HELLO)"
         @beam.lineStyle 2, 0xFF0000, 1
         @beam.moveTo from.x, from.y
         @beam.lineTo to.x, to.y
@@ -39,4 +41,3 @@ define ["Phaser", "_"], (Phaser) ->
         game.timer.add @timeActive, =>
           @beam.clear()
           @target.damage @damage / 2
-
