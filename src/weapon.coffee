@@ -16,6 +16,7 @@ define ["Phaser", "_"], (Phaser) ->
         console.dir this
         @beam = game.add.graphics 0, 0
         @direction = new Phaser.Line()
+        @beginRecharge off
       # set Target
       setTarget: (ship, target) ->
         console.log "SETTING TARGETZ"
@@ -25,6 +26,8 @@ define ["Phaser", "_"], (Phaser) ->
         # Draw attack laser thing if TRUE
         @fire()
       fire: ->
+        # Need to have target and ship
+        return unless @target and @ship
         @direction.fromSprite @ship, @target
         # Can we get the target ?
         unless @canFire()
@@ -33,9 +36,9 @@ define ["Phaser", "_"], (Phaser) ->
           @game.timer.add 100, @fire, this
         # We can get the target
         # Draw laser beamz (in a timer thing cos otherwise it would draw when paused)
-        @game.timer.add 1, @draw, this
+        @game.timer.add 100, @draw, this
         # Start the firing loop
-        @game.timer.add 10, @whenFiring, this
+        @game.timer.add 100, @whenFiring, this
         console.log "FIREZ"
       canFire: ->
         @fail = no
@@ -50,13 +53,11 @@ define ["Phaser", "_"], (Phaser) ->
         @beam.moveTo from.x, from.y
         @beam.lineTo to.x, to.y
         # Do damage in two seperate strokes
-        @beenActive = 0
 
       # Checks stuff when firing
       whenFiring: =>
         @beenActive += 10
         if @beenActive > @timeActive || !@canFire()
-          @beam.clear()
           @beginRecharge()
           return
         #Is the the target still in the beam?
@@ -65,10 +66,14 @@ define ["Phaser", "_"], (Phaser) ->
           console.log "CLEARING"
           game.timer.add 100, =>
             @beam.clear()
-            @beginRecharge()
+            @fire()
           return
         # Damage
-        @target.damage @damage * (1 / @timeActive)
+        @target.damage @damage / (@timeActive * .1)
+        @target = null if @target.health <= 0
         game.timer.add 10, @whenFiring
-      beginRecharge: ->
-        game.timer.add @rechargeTime, @fire, this
+      beginRecharge: (fireWhenDone=on) ->
+        #Cannot recharge while active
+        @beam.clear()
+        game.timer.add @rechargeTime, @fire, this if fireWhenDone
+        @beenActive = 0
