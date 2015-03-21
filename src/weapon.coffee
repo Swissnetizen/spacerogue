@@ -10,8 +10,8 @@ define ["Phaser", "_"], (Phaser) ->
       name: "BasicWeapon"
       maxDistance: 200
       # Centi Seconds
-      timeActive: 300
-      @
+      timeActive: 3000
+      rechargeTime:
       constructor: (@game, @fleet) ->
         console.dir this
         @beam = game.add.graphics 0, 0
@@ -42,8 +42,8 @@ define ["Phaser", "_"], (Phaser) ->
         @beenActive = 0
         game.timer.add 10, @whenFiring
       whenFiring: =>
-        @beenActive += 1
-        if @beenActive == @timeActive || !@canFire()
+        @beenActive += 10
+        if @beenActive > @timeActive || !@canFire()
           @beam.clear()
           @beginRecharge()
         #Is the the target still in the beam?
@@ -56,3 +56,4 @@ define ["Phaser", "_"], (Phaser) ->
         @target.damage @damage * (1 / @timeActive)
         game.timer.add 10, @whenFiring
       beginRecharge: =>
+
