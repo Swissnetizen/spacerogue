@@ -43,6 +43,8 @@ define ["Phaser", "_"], (Phaser) ->
       canFire: ->
         @fail = no
         return yes if @direction.length > @maxDistence
+        # THEY MUST BOTH
+        return no unless @target and @ship
         _.each (@direction.coordinatesOnLine 5), (n) =>
             # Checks if any of the sprites are other than the ship OR target
            _.each (@game.physics.p2.hitTest {x: n[0], y: n[1]}), (n) =>
@@ -57,6 +59,7 @@ define ["Phaser", "_"], (Phaser) ->
       # Checks stuff when firing
       whenFiring: =>
         @beenActive += 10
+        return unless @ship and @target
         if @beenActive > @timeActive || !@canFire()
           @beginRecharge()
           return
