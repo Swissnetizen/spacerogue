@@ -9,7 +9,9 @@ define ["Phaser", "_"], (Phaser) ->
       accuracy: 800 / 1000
       name: "BasicWeapon"
       maxDistance: 200
-      timeActive: 1000
+      # Centi Seconds
+      timeActive: 300
+      @
       constructor: (@game, @fleet) ->
         console.dir this
         @beam = game.add.graphics 0, 0
@@ -26,6 +28,7 @@ define ["Phaser", "_"], (Phaser) ->
           @draw ship, target
       canFire: ->
         @fail = no
+        return yes if @direction.length > @maxDistence
         _.each (@direction.coordinatesOnLine 5), (n) =>
             # Checks if any of the sprites are other than the ship OR target
            _.each (@game.physics.p2.hitTest {x: n[0], y: n[1]}), (n) =>
@@ -36,8 +39,20 @@ define ["Phaser", "_"], (Phaser) ->
         @beam.moveTo from.x, from.y
         @beam.lineTo to.x, to.y
         # Do damage in two seperate strokes
-        game.timer.add @timeActive / 2, =>
-          @target.damage @damage / 2
-        game.timer.add @timeActive, =>
+        @beenActive = 0
+        game.timer.add 10, @whenFiring
+      whenFiring: =>
+        @beenActive += 1
+        if @beenActive == @timeActive || !@canFire()
           @beam.clear()
-          @target.damage @damage / 2
+          @beginRecharge()
+        #Is the the target still in the beam?
+        unless @game.physics.p2.hitTest @direction.end, [@target], 2, true
+          game.timer.add 100, =>
+            @beam.clear()
+            @beginRecharge()
+          return
+        # Damage
+        @target.damage @damage * (1 / @timeActive)
+        game.timer.add 10, @whenFiring
+      beginRecharge: =>

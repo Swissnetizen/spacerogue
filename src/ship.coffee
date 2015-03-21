@@ -8,7 +8,7 @@ define ["Phaser"], (Phaser) ->
     maxUtilPoints: 3
     maxCrew: 6
     minCrew: 2
-    #Speed in px/s (m/s)
+    #Speed in px/s (2 m/s)
     speed: 125
     constructor: (game, x, y, key, frame) ->
       @hardPoints = []
