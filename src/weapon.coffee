@@ -61,7 +61,6 @@ define ["Phaser", "_"], (Phaser) ->
           return
         #Is the the target still in the beam?
         pointingTo = @game.physics.p2.hitTest @direction.end, [@target], 2, yes
-        console.log pointingTo
         unless pointingTo.length == 1 && pointingTo[0].parent == @target.body
           console.log "CLEARING"
           game.timer.add 100, =>
