@@ -1,5 +1,6 @@
 "use strict"
-define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon"], (Phaser, ship, menu, planet, pause, weapon) ->
+define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon", "collisionEvent"],
+(Phaser, ship, menu, planet, pause, weapon) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
@@ -29,6 +30,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon"], (Phaser
       game.pauser = new pause.Pauser(game)
       game.laser = new weapon.BasicWeapon(game)
       game.timer.start()
+
     end: ->
       game.state.start "menu"
     update: ->
