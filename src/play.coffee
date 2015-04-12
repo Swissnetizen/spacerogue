@@ -1,5 +1,5 @@
 "use strict"
-define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "weapon", "collisionEvent"],
+define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "laser", "collisionEvent"],
 (Phaser, ship, menu, planet, pause, weapon) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
