@@ -7,10 +7,10 @@
 
 #Tasks for Alpha
 ## Stage 1
-    *Implement all things related to battle mode*
+*Implement all things related to battle mode*
 ##Stage 2
-    *Implement everything related to travel mode*
+*Implement everything related to travel mode*
 ##Stage 3
-    *Procedral generation*
+*Procedral generation*
 ## Stage 4
-    *AI*
+*AI*
