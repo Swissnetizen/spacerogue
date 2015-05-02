@@ -1,7 +1,7 @@
 "use strict"
 define ["Phaser", "_"], (Phaser) ->
   exports =
-    Weapon: class Weapon
+    Base: class Base
       damage: 20
       # How many HP will the damage vary
       variation: 2
@@ -11,12 +11,10 @@ define ["Phaser", "_"], (Phaser) ->
       rechargeTime: 2000
       constructor: (@game, @fleet) ->
         console.dir this
-        @beam = game.add.graphics 0, 0
         @direction = new Phaser.Line()
         @beginRecharge off
       # set Target
       setTarget: (ship, target) ->
-        console.log "SETTING TARGETZ"
         @ship = ship
         # Go over line to find intersections
         # Draw attack laser thing if TRUE
@@ -31,3 +29,15 @@ define ["Phaser", "_"], (Phaser) ->
       beginRecharge: (fireWhenDone=on) ->
         #Cannot recharge while active
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
+    Projectile: class Projectile extends Base
+      noShots: 1
+      delayBetweenShots: 50
+      constructor: (@game, @fleet) ->
+        @beginRecharge off
+        @shotSprites = []
+      createSprite: ->
+        @game.createSprite
+      fire: ->
+
+        
+

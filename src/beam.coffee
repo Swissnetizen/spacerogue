@@ -1,7 +1,7 @@
 "use strict"
 define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
   exports =
-    Basic: class BasicWeapon extends weapon.Weapon
+    Basic: class BasicWeapon extends weapon.Base
       damage: 20
       # How many HP will the damage vary
       variation: 2
@@ -13,14 +13,13 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       timeActive: 3000
       rechargeTime: 2000
       constructor: (@game, @fleet) ->
-        console.dir this
+        console.dir 
         @beamGraphic = game.add.graphics 0, 0
         @direction = new Phaser.Line()
         @beginRecharge off
         @targetRandomness = new Phaser.RandomDataGenerator(Date.now())
       # set Target
       setTarget: (ship, target) ->
-        console.log "SETTING TARGETZ"
         @ship = ship
         @target = target
         # Go over line to find intersections
@@ -33,14 +32,12 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         # Can we get the target ?
         unless @canFire()
           #Check laterz
-          console.log "CHECK LATERZ"
           @game.timer.add 100, @fire, this
         # We can get the target
         # Draw laser beamz (in a timer thing cos otherwise it would draw when paused)
         @game.timer.add 1, @draw, this
         # Start the firing loop
         @game.timer.add 1, @whenFiring, this
-        console.log "FIREZ"
       canFire: ->
         @fail = no
         return yes if @direction.length > @maxDistence
@@ -54,22 +51,18 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       draw: (from=@ship, to=@target) ->
         # Randomise where beam hits!
         coords = @randomShipCoords to
-        console.log to.x + ";" + to.y
         @beamGraphic.lineStyle 2, 0xFF0000, 1
         @beamGraphic.moveTo from.x, from.y
         @beamGraphic.lineTo coords.x, coords.y
         # Do damage in two seperate strokes
       randomShipCoords: (ship, trials=0) ->
-        h = @ship.height / 2 - 1
-        w = @ship.width / 2 - 1
+        h = @ship.height / 2 * 500 / 1000
+        w = @ship.width / 2 * 500 / 1000
         x = @targetRandomness.between(-w, w) + ship.x
         y = @targetRandomness.between(-h, h) + ship.y
-        console.log x + ";" + y
         #Prevents infinte loop
         test = @game.physics.p2.hitTest {x: x, y: y}
-        console.dir test
         if trials == 10
-          console.log " FUCK"
           return {x: ship.x, y: ship.y}
         else if test > 1 ||  !test || test[0].parent.sprite != ship
           @randomShipCoords ship, trials + 1
@@ -85,7 +78,6 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         #Is the the target still in the beam?
         pointingTo = @game.physics.p2.hitTest @direction.end, [@target], 2, yes
         unless pointingTo.length == 1 && pointingTo[0].parent == @target.body
-          console.log "CLEARING"
           @beenActive += .0001
           game.timer.add .0001, =>
             @beamGraphic.clear()
