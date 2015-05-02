@@ -67,7 +67,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
       whenShipClickedTargeting: (ship) =>
         # Cannot target self
         return @hide() if ship == @selectedShip
-        @game.laser.setTarget @selectedShip, ship
+        @game.beam.setTarget @selectedShip, ship
       defineHitbox: ->
         # Define the circle
         new Phaser.Circle(@x, @y, 2*(@radius+@lineWidth))
