@@ -1,6 +1,6 @@
 "use strict"
-define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "collisionEvent"],
-(Phaser, ship, menu, planet, pause, beam) ->
+define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "weapon"],
+(Phaser, ship, menu, planet, pause, beam, wep) ->
   exports = {}
   exports.PlayState = class PlayState extends Phaser.State
     create: ->
@@ -12,7 +12,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "collision
           font: "25px pixelated"
           fill: "#ffffff")
       game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add @end, this
-      game.physics.p2.defaultRestitution = 0.8;
+     # game.physics.p2.defaultRestitution = 0.8;
       game.ship = @ship2
       @ship1 = new ship.BaseShip(@game, 250, 200, "shuttle")
       @ship2 = new ship.BaseShip(@game, 400, 200, "shuttle")
@@ -29,6 +29,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "collision
       game.timer = game.time.create off
       game.pauser = new pause.Pauser(game)
       game.beam = new beam.Basic(game)
+      game.missile = new wep.Projectile(game)
       game.timer.start()
 
     end: ->
