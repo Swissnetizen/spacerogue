@@ -31,8 +31,9 @@ define ["Phaser", "_"], (Phaser) ->
         #Cannot recharge while active
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
     Projectile: class Projectile extends Base
-      damage: 1000
+      damage: 50
       noShot: 0
+      nowMoving: 0
       delayBetweenShots: 50
       speed: 50
       constructor: (@game, @fleet) ->
@@ -46,9 +47,20 @@ define ["Phaser", "_"], (Phaser) ->
         sprite
       fire: ->
         console.log "FIRE"
-        @move @target, @shotSprites[0]
+        console.log "NOWMOV: " + @nowMoving
+        if @nowMoving < @shotSprites.length
+          console.log "ein"
+          @fireOne()
+        else if @nowMoving >= @shotSprites.length
+          console.log "NOW"
+          game.timer.add 500, @fire, this
       fireOne: =>
         @move @target, @shotSprites[@noShot]
+        @nowMoving += 1
+        @noShot += 1
+        if @noShot >= @shotSprites.length
+          console.log "begin recharge"
+          @beginRecharge yes
       whenHit: ->
         return unless @t.ship
         _.forEach arguments, (i) =>
@@ -62,8 +74,8 @@ define ["Phaser", "_"], (Phaser) ->
           # is sprite weapon parent
           return if sprite.z == @t.ship.z or sprite.z == @projectile.z
           @projectile.kill()
+          @t.nowMoving -= 1
           sprite.damage @t.damage
-
       move: (point, sprite) =>
         x = point.x
         y = point.y
@@ -75,5 +87,9 @@ define ["Phaser", "_"], (Phaser) ->
         # Set sprite in motion
         sprite.body.velocity.x = Math.cos(angle) * @speed
         sprite.body.velocity.y = Math.sin(angle) * @speed
+      beginRecharge: (fireWhenDone=on) ->
+        #Cannot recharge while active
+        @noShot = 0
+        game.timer.add @rechargeTime, @fire, this if fireWhenDone
           
 
