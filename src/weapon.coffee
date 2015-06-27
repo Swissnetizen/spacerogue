@@ -52,21 +52,17 @@ define ["Phaser", "_"], (Phaser) ->
         _.forEach arguments, (i) =>
           # @t. = this.
           # In case argument is EMPTY
-          console.dir i
           return unless i.aabb?
           # In case there is not a bloody parent or sprite
           return unless i.parent?
           return unless i.parent.sprite?
           sprite = i.parent.sprite
           # is sprite weapon parent
-          console.log "Z"
-          console.log @t.ship.z
           return if sprite.z == @t.ship.z or sprite.z == @projectile.z
           @projectile.kill()
           sprite.damage @t.damage
 
       move: (point, sprite) =>
-        console.log "MOVE"
         x = point.x
         y = point.y
         sprite.reset @ship.x, @ship.y
