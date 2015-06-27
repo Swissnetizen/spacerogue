@@ -106,7 +106,7 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
         this
       drawButtons: (font) ->
         @missileButton = new textButton.TextButton(@game, 0, 0, "missile", font, @whenMissileButton, this)
-        @laserButton = new textButton.TextButton(@game, 0, 0, "laser", font, @whenMissileButton, this)
+        @laserButton = new textButton.TextButton(@game, 0, 0, "laser", font, @whenLaserButton, this)
         game.add.existing @missileButton
         game.add.existing @laserButton
         # Add to parent as child
@@ -122,5 +122,5 @@ define ["Phaser", "shipMenu/textButton"], (Phaser, textButton) ->
       whenMissileButton: (event) ->
         @targeting = yes
         @missile = on
-
-#      whenLaserButton: (event) ->
+      whenLaserButton: (event) ->
+        @targeting = yes

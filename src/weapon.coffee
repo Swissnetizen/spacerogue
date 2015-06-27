@@ -13,6 +13,7 @@ define ["Phaser", "_"], (Phaser) ->
         console.dir this
         @direction = new Phaser.Line()
         @beginRecharge off
+        @random = new Phaser.RandomDataGenerator(Date.now())
       # set Target
       setTarget: (ship, target) ->
         @ship = ship
@@ -30,6 +31,7 @@ define ["Phaser", "_"], (Phaser) ->
         #Cannot recharge while active
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
     Projectile: class Projectile extends Base
+      damage: 1000
       noShots: 1
       delayBetweenShots: 50
       speed: 50
@@ -40,13 +42,28 @@ define ["Phaser", "_"], (Phaser) ->
         sprite = @game.add.sprite 0, 0, "mute"
         @game.physics.p2.enable sprite
         sprite.body.data.shapes[0].sensor = on
-        game.physics.p2.onBeginContact.add @whenHit, this
+        game.physics.p2.onBeginContact.add @whenHit, {t: this, projectile: sprite}
         sprite
       fire: ->
         console.log "FIRE"
         @move @target, @shotSprites[0]
       whenHit: ->
-        console.dir arguments
+        return unless @t.ship
+        _.forEach arguments, (i) =>
+          # @t. = this.
+          # In case argument is EMPTY
+          console.dir i
+          return unless i.aabb?
+          # In case there is not a bloody parent or sprite
+          return unless i.parent?
+          return unless i.parent.sprite?
+          sprite = i.parent.sprite
+          # is sprite weapon parent
+          console.log "Z"
+          console.log @t.ship.z
+          return if sprite.z == @t.ship.z or sprite.z == @projectile.z
+          @projectile.kill()
+          sprite.damage @t.damage
 
       move: (point, sprite) =>
         console.log "MOVE"

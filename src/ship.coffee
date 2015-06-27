@@ -10,6 +10,7 @@ define ["Phaser"], (Phaser) ->
     minCrew: 2
     #Speed in px/s (2 m/s)
     speed: 125
+    nom: "SHIP"
     constructor: (game, x, y, key, frame) ->
       @hardPoints = []
       @utilPoints = []
