@@ -32,7 +32,7 @@ define ["Phaser", "_"], (Phaser) ->
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
     Projectile: class Projectile extends Base
       damage: 1000
-      noShots: 1
+      noShot: 0
       delayBetweenShots: 50
       speed: 50
       constructor: (@game, @fleet) ->
@@ -47,6 +47,8 @@ define ["Phaser", "_"], (Phaser) ->
       fire: ->
         console.log "FIRE"
         @move @target, @shotSprites[0]
+      fireOne: =>
+        @move @target, @shotSprites[@noShot]
       whenHit: ->
         return unless @t.ship
         _.forEach arguments, (i) =>
