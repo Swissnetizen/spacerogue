@@ -18,6 +18,7 @@ define ["Phaser"], (Phaser) ->
       @game.load.image "shuttle", "assets/shuttle.png"
       @game.load.image "destination", "assets/destination.png"
       @game.load.image "planet", "assets/planet.png"
+      @game.load.image "missile", "assets/missile.png"
       versionLabel = @game.add.text(
         @game.world.width-70
         5
