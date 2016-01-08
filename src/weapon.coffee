@@ -42,7 +42,7 @@ define ["Phaser", "_"], (Phaser) ->
         @shotSprites[0].id = 0
         @shotSprites[1].id = 1
       createSprite: ->
-        sprite = @game.add.sprite 0, 0, "mute"
+        sprite = @game.add.sprite 0, 0, "missile"
         @game.physics.p2.enable sprite
         sprite.body.data.shapes[0].sensor = on
         sprite.kill()
