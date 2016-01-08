@@ -12,7 +12,12 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "weapon"],
           font: "25px pixelated"
           fill: "#ffffff")
       game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add @end, this
-     # game.physics.p2.defaultRestitution = 0.8;
+      # Press R to restart
+      game.input.keyboard.addKey(Phaser.Keyboard.R).onUp.add(-> 
+          game.state.start "play"
+        )
+      # game.physics.p2.defaultRestitution = 0.8;
+      # Add ships
       game.ship = @ship2
       @ship1 = new ship.BaseShip(@game, 250, 200, "shuttle")
       @ship2 = new ship.BaseShip(@game, 400, 200, "shuttle")
