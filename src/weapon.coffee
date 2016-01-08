@@ -38,19 +38,25 @@ define ["Phaser", "_"], (Phaser) ->
       speed: 50
       constructor: (@game, @fleet) ->
         @beginRecharge off
-        @shotSprites = [@createSprite()]
+        @shotSprites = [@createSprite(), @createSprite()]
+        @shotSprites[0].id = 0
+        @shotSprites[1].id = 1
       createSprite: ->
         sprite = @game.add.sprite 0, 0, "mute"
         @game.physics.p2.enable sprite
         sprite.body.data.shapes[0].sensor = on
+        sprite.kill()
         game.physics.p2.onBeginContact.add @whenHit, {t: this, projectile: sprite}
         sprite
-      fire: ->
+      fire: (target) ->
+        @target = target if target
+        return unless @target && @target.alive
         console.log "FIRE"
         console.log "NOWMOV: " + @nowMoving
         if @nowMoving < @shotSprites.length
           console.log "ein"
           @fireOne()
+          game.timer.add 250, @fire, this
         else if @nowMoving >= @shotSprites.length
           console.log "NOW"
           game.timer.add 500, @fire, this
@@ -58,11 +64,14 @@ define ["Phaser", "_"], (Phaser) ->
         @move @target, @shotSprites[@noShot]
         @nowMoving += 1
         @noShot += 1
+        console.log "FIRED"
         if @noShot >= @shotSprites.length
           console.log "begin recharge"
           @beginRecharge yes
       whenHit: ->
         return unless @t.ship
+        return unless @projectile.alive
+        console.log "| i | HIT!"
         _.forEach arguments, (i) =>
           # @t. = this.
           # In case argument is EMPTY

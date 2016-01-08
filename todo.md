@@ -1,6 +1,6 @@
 #Tasks for prealpha
 1. Implement Ships (Done) (v0.2)
-2. Implement Beam (Done) (v0.3)
+2. Implement (Basic) Beam (Done) (v0.3)
 3. Implement Missile / Laser. (v0.4)
 4. Implement Shield
 5. Implement proper support for fleets and weapons. (v0.5)
