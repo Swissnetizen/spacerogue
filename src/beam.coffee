@@ -8,11 +8,11 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       #An interger or percentage of the chance to hit.
       accuracy: 800 / 1000
       name: "BasicWeapon"
-      maxDistance: 200
-      # Centi Seconds
-      timeActive: 3000
-      rechargeTime: 2000
-      beenActive: 0
+      maxDistance: 2000 # px
+      timeActive: 3000 # ms
+      rechargeTime: 2000 # ms
+      beenActive: 0 # ms
+      beamsActive: no
       constructor: (@game, @fleet) ->
         console.dir 
         @beamGraphic = game.add.graphics 0, 0
@@ -35,7 +35,7 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         return unless @target and @ship
         @direction.fromSprite @ship, @target
         # Can we get the target ?
-        unless @canFire()
+        if not @canFire() or @beamActive
           #Check laterz
           @game.timer.add 100, @fire, this
           return
@@ -44,7 +44,8 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         @game.timer.add 1, @draw, this
         # Start the firing loop
         @game.timer.add 1, @whenFiring, this
-      canFire: (ignoreActive=false) ->
+        @beamActive = true
+      canFire: () ->
         possible = yes
         # in range? (I'm not too sure how it works though)
         return no if @direction.length > @maxDistence
@@ -52,7 +53,6 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         return no unless @target and @ship
         # Is the ship we're shooting from movingL
         return no if @shooterMoving 
-        return no if @beamActive && not ignoreActive
         # Check if line intersects any entity apart from
         # ship or target
         coordsOnLine = @direction.coordinatesOnLine 5
@@ -94,7 +94,7 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       whenFiring: =>
         @beenActive += 1
         return unless @ship and @target
-        if @beenActive > @timeActive || !@canFire(true)
+        if @beenActive > @timeActive || not @canFire()
           @beginRecharge()
           return
         #Is the the target still in the beam?
@@ -105,7 +105,7 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
           # paused
           @beenActive += .0001
           game.timer.add .0001, =>
-            @beamGraphic.clear()
+            @endBeam()
             @fire()
           return
         # Damage
@@ -114,6 +114,10 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         game.timer.add 1, @whenFiring
       beginRecharge: (fireWhenDone=on) ->
         #Cannot recharge while active
-        @beamGraphic.clear()
+        @endBeam()
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
         @beenActive = 0
+      endBeam: ->
+        @beamActive = false
+        @beamGraphic.clear()
+
