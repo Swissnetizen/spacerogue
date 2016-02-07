@@ -9,6 +9,7 @@ define ["Phaser", "_"], (Phaser) ->
       accuracy: 800 / 1000
       name: "Weapon"
       rechargeTime: 2000
+      shooterMoving: false
       constructor: (@game, @fleet) ->
         console.dir this
         @direction = new Phaser.Line()
@@ -18,6 +19,7 @@ define ["Phaser", "_"], (Phaser) ->
       setTarget: (ship, target) ->
         @ship = ship
         @target = target
+        @ship.bindEvent "moving", @movingChange
         # Go over line to find intersections
         # Draw attack laser thing if TRUE 
         @fire()
@@ -30,9 +32,13 @@ define ["Phaser", "_"], (Phaser) ->
       beginRecharge: (fireWhenDone=on) ->
         #Cannot recharge while active
         game.timer.add @rechargeTime, @fire, this if fireWhenDone
+      movingChange: (state) =>
+        @shooterMoving = state
     Projectile: class Projectile extends Base
       damage: 50
+      # Max number of shots
       noShot: 0
+      #Number of shot sprites moving
       nowMoving: 0
       delayBetweenShots: 50
       speed: 50
@@ -51,20 +57,15 @@ define ["Phaser", "_"], (Phaser) ->
       fire: (target) ->
         @target = target if target
         return unless @target && @target.alive
-        console.log "FIRE"
-        console.log "NOWMOV: " + @nowMoving
         if @nowMoving < @shotSprites.length
-          console.log "ein"
           @fireOne()
           game.timer.add 250, @fire, this
         else if @nowMoving >= @shotSprites.length
-          console.log "NOW"
           game.timer.add 500, @fire, this
       fireOne: =>
         @move @target, @shotSprites[@noShot]
         @nowMoving += 1
         @noShot += 1
-        console.log "FIRED"
         if @noShot >= @shotSprites.length
           console.log "begin recharge"
           @beginRecharge yes
@@ -82,6 +83,7 @@ define ["Phaser", "_"], (Phaser) ->
           sprite = i.parent.sprite
           # is sprite weapon parent
           return if sprite.z == @t.ship.z or sprite.z == @projectile.z
+          console.log "not parent"
           @projectile.kill()
           @t.nowMoving -= 1
           sprite.damage @t.damage
@@ -91,14 +93,11 @@ define ["Phaser", "_"], (Phaser) ->
         sprite.reset @ship.x, @ship.y
         # Calculate angle
         angle = Math.atan2 y - sprite.y, x - sprite.x
-        # NOTE Correct angle of angry bullets (depends on the sprite used)
-        sprite.body.rotation = angle + game.math.degToRad 90
         # Set sprite in motion
         sprite.body.velocity.x = Math.cos(angle) * @speed
         sprite.body.velocity.y = Math.sin(angle) * @speed
       beginRecharge: (fireWhenDone=on) ->
         #Cannot recharge while active
         @noShot = 0
-        game.timer.add @rechargeTime, @fire, this if fireWhenDone
-          
+        game.timer.add @rechargeTime, @fire, this if fireWhenDone   
 
