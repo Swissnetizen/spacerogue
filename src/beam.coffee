@@ -12,6 +12,7 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       # Centi Seconds
       timeActive: 3000
       rechargeTime: 2000
+      beenActive: 0
       constructor: (@game, @fleet) ->
         console.dir 
         @beamGraphic = game.add.graphics 0, 0
@@ -22,6 +23,10 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       setTarget: (ship, target) ->
         @ship = ship
         @target = target
+        @ship.bindEvent("moving", (isMoving) => 
+          console.log "WTF"
+          @beginRecharge() if isMoving
+        )
         # Go over line to find intersections
         # Draw attack laser thing if TRUE
         @fire()
@@ -33,21 +38,38 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         unless @canFire()
           #Check laterz
           @game.timer.add 100, @fire, this
+          return
         # We can get the target
         # Draw laser beamz (in a timer thing cos otherwise it would draw when paused)
         @game.timer.add 1, @draw, this
         # Start the firing loop
         @game.timer.add 1, @whenFiring, this
-      canFire: ->
-        @fail = no
-        return yes if @direction.length > @maxDistence
-        # THEY MUST BOTH
+      canFire: (ignoreActive=false) ->
+        possible = yes
+        # in range? (I'm not too sure how it works though)
+        return no if @direction.length > @maxDistence
+        # THEY MUST BOTH exist
         return no unless @target and @ship
-        _.each (@direction.coordinatesOnLine 5), (n) =>
-            # Checks if any of the sprites are other than the ship OR target
-           _.each (@game.physics.p2.hitTest {x: n[0], y: n[1]}), (n) =>
-                @fail = yes unless n.id == @ship.body.id || n.id == @target.body.id
-        return !@fail
+        # Is the ship we're shooting from movingL
+        return no if @shooterMoving 
+        return no if @beamActive && not ignoreActive
+        # Check if line intersects any entity apart from
+        # ship or target
+        coordsOnLine = @direction.coordinatesOnLine 5
+        intersects = false
+        for coord in coordsOnLine
+          coord = {x: coord[0], y: coord[1]}
+          entitiesIntersecting = @game.physics.p2.hitTest coord
+          for entity in entitiesIntersecting
+            id = entity.id
+            if id == @ship.body.id or id == @target.body.id
+              continue
+            else
+              intersects = true
+              break
+          break if intersects
+        return no if intersects
+        return possible
       draw: (from=@ship, to=@target) ->
         # Randomise where beam hits!
         coords = @randomShipCoords to
@@ -60,7 +82,7 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
         w = @ship.width / 2 * 500 / 1000
         x = @targetRandomness.between(-w, w) + ship.x
         y = @targetRandomness.between(-h, h) + ship.y
-        #Prevents infinte loop
+        # Prevents infinte loop
         test = @game.physics.p2.hitTest {x: x, y: y}
         if trials == 10
           return {x: ship.x, y: ship.y}
@@ -72,12 +94,15 @@ define ["Phaser", "_", "weapon"], (Phaser, _, weapon) ->
       whenFiring: =>
         @beenActive += 1
         return unless @ship and @target
-        if @beenActive > @timeActive || !@canFire()
+        if @beenActive > @timeActive || !@canFire(true)
           @beginRecharge()
           return
         #Is the the target still in the beam?
         pointingTo = @game.physics.p2.hitTest @direction.end, [@target], 2, yes
         unless pointingTo.length == 1 && pointingTo[0].parent == @target.body
+          # By adding a tiny delay, it will gurantee 
+          # that the beam will not be cleared when 
+          # paused
           @beenActive += .0001
           game.timer.add .0001, =>
             @beamGraphic.clear()
