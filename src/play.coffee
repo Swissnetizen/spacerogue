@@ -13,7 +13,7 @@ define ["Phaser", "Ship", "shipMenu/menu", "planet", "pause", "beam", "weapon"],
           fill: "#ffffff")
       game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add @end, this
       # Press R to restart
-      game.input.keyboard.addKey(Phaser.Keyboard.R).onUp.add(-> 
+      game.input.keyboard.addKey(Phaser.Keyboard.S).onUp.add(-> 
           game.state.start "play"
         )
       # game.physics.p2.defaultRestitution = 0.8;
